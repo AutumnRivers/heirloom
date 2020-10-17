@@ -15,5 +15,6 @@ window.addEventListener('load', () => {
 });
 
 ipcRenderer.on('legendary-term-data', (ev, data) => {
-    console.info('Data Received: ' + data);
+    console.info('Received Legendary Data.');
+    console.info(data);
 });

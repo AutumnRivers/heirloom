@@ -79,6 +79,14 @@ function openMainWindow() {
                         mainWindow.webContents.send('navigate-to-settings');
                     }
                 },
+                process.env.NODE_ENV === 'dev' ? {"label": "Inspect", click() { mainWindow.webContents.openDevTools(); }} : {"type":"separator"},
+                {
+                    label: "Send Test Signal (Dev)",
+                    click() {
+                        spawnLegendaryConsole('status', ['--offline']);
+                    },
+                    visible: process.env.NODE_ENV === 'dev'
+                },
                 {
                     label: "Quit",
                     click() {
@@ -87,7 +95,9 @@ function openMainWindow() {
                 }
             ]
         }
-    ])
+    ]);
+
+    Menu.setApplicationMenu(menuBar);
 
     mainWindow.loadFile('./pages/hub.html');
 
@@ -118,6 +128,9 @@ function openMainWindow() {
             case 'installgame': // Install a game. Arguments required.
                 if(!args || args.length === 0) return mainWindow.webContents.send('args-required');
                 break;
+            case 'testinstall': // Test installation of Legendary. Meant for debugging.
+                spawnLegendaryConsole('status', ['--offline']);
+                break;
             default: // Failsafe
                 console.warn(chalk.yellow('Invalid Legendary Command'));
                 return mainWindow.webContents.send('invalid-command');
@@ -126,7 +139,12 @@ function openMainWindow() {
     });
 
     function spawnLegendaryConsole(command, args) {
-        var legendaryTerminal = childProcess.spawn(`legendary ${command} ${args}`);
+        // TODO: Use a package to actually spawn a window with this if enabled
+        // --enable-terminal / -t
+        var legendaryTerminal = childProcess.exec(`legendary ${command} ${args}`);
+        // FIXME: args will be coming in arrays, not strings. Separate those so they're multiple.
+        // Ok me I will do that
+        // Thank you me :)
     
         legendaryTerminal.stdout.on('data', (data) => {
             mainWindow.webContents.send('legendary-term-data', data);

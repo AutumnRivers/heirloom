@@ -1,5 +1,5 @@
 // Entry point file
-const { app, BrowserWindow, ipcMain, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, shell } = require('electron');
 
 const Store = require('electron-store');
 const fetch = require('node-fetch');
@@ -83,7 +83,7 @@ function openMainWindow() {
                 {
                     label: "Send Test Signal (Dev)",
                     click() {
-                        spawnLegendaryConsole('status', ['--offline']);
+                        spawnLegendaryConsole('status', ['--offline', '--json']);
                     },
                     visible: process.env.NODE_ENV === 'dev'
                 },
@@ -101,7 +101,7 @@ function openMainWindow() {
 
     mainWindow.loadFile('./pages/hub.html');
 
-    mainWindow.webContents.on('use-legendary', (ev, cmd, args) => {
+    ipcMain.on('use-legendary', (ev, cmd, args) => {
 
         if(!unixShell.which('legendary')) return mainWindow.webContents.send('legendary-not-installed');
 
@@ -114,13 +114,16 @@ function openMainWindow() {
                 if(!args || args.length === 0) return mainWindow.webContents.send('args-required');
                 break;
             case 'listgames': // List installed games
+                spawnLegendaryConsole('list-installed', ['--json']);
                 break;
             case 'ownedgames': // List owned games
+                spawnLegendaryConsole('list-games', ['--json']);
                 break;
             case 'launchgame': // Launch installed game. Arguments required.
                 if(!args || args.length === 0) return mainWindow.webContents.send('args-required');
                 break;
             case 'getinfo': // Get general information
+                spawnLegendaryConsole('status', ['--json']);
                 break;
             case 'verifyfiles': // Verify files of a game. Arguments required.
                 if(!args || args.length === 0) return mainWindow.webContents.send('args-required');
@@ -129,7 +132,7 @@ function openMainWindow() {
                 if(!args || args.length === 0) return mainWindow.webContents.send('args-required');
                 break;
             case 'testinstall': // Test installation of Legendary. Meant for debugging.
-                spawnLegendaryConsole('status', ['--offline']);
+                spawnLegendaryConsole('status', ['--offline', '--json']);
                 break;
             default: // Failsafe
                 console.warn(chalk.yellow('Invalid Legendary Command'));
@@ -141,24 +144,35 @@ function openMainWindow() {
     function spawnLegendaryConsole(command, args) {
         // TODO: Use a package to actually spawn a window with this if enabled
         // --enable-terminal / -t
+        if(typeof args === 'object') args = args.join(' ');
         var legendaryTerminal = childProcess.exec(`legendary ${command} ${args}`);
-        // FIXME: args will be coming in arrays, not strings. Separate those so they're multiple.
-        // Ok me I will do that
-        // Thank you me :)
     
         legendaryTerminal.stdout.on('data', (data) => {
             mainWindow.webContents.send('legendary-term-data', data);
+            console.info('(LEGENDARY) ' + data);
         });
     
         legendaryTerminal.stderr.on('data', (errorData) => {
-            mainWindow.webContents.send('legendary-error-data', errorData);
-            console.error(chalk.red('Legendary encountered an error: ' + errorData));
+            // Don't treat informational lines as errors
+            if(errorData.includes('[Core] INFO:') || errorData.includes('[cli] INFO:')) {
+                mainWindow.webContents.send('legendary-term-data', errorData);
+                console.info('(LEGENDARY) ' + errorData);
+                return;
+            } else {
+                mainWindow.webContents.send('legendary-error-data', errorData);
+                console.error(chalk.red('Legendary encountered an error: ' + errorData));
+            }
         });
 
         legendaryTerminal.on('close', () => {
             return mainWindow.webContents.send('finished-terminal-process');
         });
     }
+
+    mainWindow.webContents.on('new-window', function(event, url) {
+        event.preventDefault();
+        shell.openExternal(url);
+    });
 
 }
 

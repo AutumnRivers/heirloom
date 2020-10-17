@@ -9,6 +9,19 @@ body, html {
     color: white;
 }
 
+tr:hover {
+    background-color: rgba(255,255,255,0.1) !important;
+}
+
+thead tr:hover {
+    background-color: transparent !important;
+}
+
+a:link, a:hover, a:active, a:visited {
+    color: rgb(173, 186, 230);
+    text-decoration: none;
+}
+
 .center {
     text-align: center;
 }
@@ -29,4 +42,8 @@ body, html {
 
 .tabs .tab a.active {
     background: transparent !important;
+}
+
+.bold {
+    font-weight: bold;
 }

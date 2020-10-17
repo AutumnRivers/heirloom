@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!-- I am 90% sure one comment is missing -->
+<html>
+    <head>
+        <title>Heirloom - Loading...</title>
+        <link rel="stylesheet" href="../css/main.css"/>
+    </head>
+    <body>
+        <header class="row">
+            <div class="col s12">
+                <ul class="tabs tabs-transparent">
+                    <li class="tab col s3"><a href="#homepage" class="white-text waves-effect waves-light">Homepage</a></li>
+                    <li class="tab col s3"><a href="#games" class="white-text waves-effect waves-light">Games</a></li>
+                    <li class="tab col s3"><a href="#settings" class="white-text waves-effect waves-light">Settings</a></li>
+                    <li class="tab col s3"><a href="#about" class="white-text waves-effect waves-light">About</a></li>
+                </ul>
+            </div>
+        </header>
+        <main class="container row">
+
+            <!-- Homepage -->
+            <div id="homepage">
+                <h2 class="center">Welcome back to <span class="heirloomLogo">Heirloom</span>.</h2>
+                <p class="center">Epic Games is currently <span id="egStatus">UKNOWN</span>.</p>
+
+                <hr/>
+
+                <div class="row">
+                    <div class="col s12">
+                        <div class="col s6">
+                            <h3>Status</h3>
+                            <p>You currently have <b id="installedGamesNo">0</b> installed games.</p>
+                            <p>You currently own <b id="ownedGamesNo">0</b> games.</p>
+                        </div>
+                        <div class="col s6" style="text-align: right;">
+                            <h3>System</h3>
+                            <p>Legendary is <b id="legendaryStatus">...</b>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="center">
+                    <h4 id="accountStatus">You are not currently logged in.</h4>
+                    <div id="accountButtons" style="display: none;">
+                        <p><a href="#" class="waves-effect waves-light btn-flat white-text">Switch User</a></p>
+                        <p><a href="#" class="waves-effect waves-light btn-flat white-text">Log Out</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Games List -->
+            <div>
+                <!-- Most of this WILL be JavaScript black magic -->
+                <!-- Swear that thing came from either heaven or hell -->
+                <!-- I'm not even religious! -->
+            </div>
+
+            <!-- Application Settings -->
+            <div>
+
+            </div>
+
+            <!-- 'About' Section -->
+            <div id="about">
+                <p>
+                    <img src="../images/HeirloomLogo.png" alt="Heirloom"/>
+                </p>
+            </div>
+        </main>
+    </body>
+    <script src="../scripts/main.js"></script>
+</html>

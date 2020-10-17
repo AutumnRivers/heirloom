@@ -1,0 +1,32 @@
+@import "../node_modules/materialize-css/dist/css/materialize.min.css";
+/* Materialize is downloaded for offline use */
+
+body, html {
+    background: #424242;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+.center {
+    text-align: center;
+}
+
+.heirloomLogo {
+    color: #89b1da;
+    font-family: "Bookman Old Style", "Times New Roman", Times, serif;
+    font-weight: lighter;
+}
+
+#egStatus {
+    font-weight: bold;
+}
+
+.tabs .indicator {
+    background: white !important;
+}
+
+.tabs .tab a.active {
+    background: transparent !important;
+}

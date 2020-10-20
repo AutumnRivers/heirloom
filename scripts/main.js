@@ -5,6 +5,8 @@ const { ipcRenderer, remote } = require('electron');
 const { TextEncoder } = require('util');
 const shell = require('shelljs');
 
+var gameModalElem;
+
 M.AutoInit();
 
 epicGamesStatus().then(status => {
@@ -15,6 +17,8 @@ epicGamesStatus().then(status => {
 window.addEventListener('load', () => {
     document.title = 'Heirloom - Retrieving Data...';
 
+    window.gameModalElem = M.Modal.getInstance(document.getElementById('gameModal'));
+
     if(shell.which('legendary')) {
         document.getElementById('legendaryStatus').innerHTML = 'Installed';
         getUserInfo();
@@ -24,6 +28,36 @@ window.addEventListener('load', () => {
         document.title = 'Heirloom - Legendary Not Detected!';
     }
 });
+
+// //
+
+function openGameModal(elem, gameArt, serverVer, installPath, localVer) {
+
+    gameModalElem.open();
+
+    if(gameArt) {
+        document.getElementById('gameArt').src = gameArt.url;
+    } else {
+        document.getElementById('gameArt').src = '../images/gameArtPlaceholder.png';
+    }
+
+    document.getElementById('gameModalTitle').innerHTML = elem.children[0].innerHTML;
+
+    document.getElementById('serverVersion').innerHTML = serverVer;
+    
+    if(installPath) {
+        document.getElementById('localVersion').innerHTML = localVer;
+        
+        document.getElementById('gameLocation').innerHTML = installPath;
+    } else {
+        document.getElementById('localVersion').innerHTML = 'n/a';
+        
+        document.getElementById('gameLocation').innerHTML = 'n/a';
+    }
+
+}
+
+// //
 
 ipcRenderer.on('legendary-term-data', (ev, data) => {
     console.info(data);
@@ -78,6 +112,11 @@ function checkGames() {
 
                 gamesList.forEach(game => {
                     var newGame = gamesTable.insertRow();
+                    newGame.setAttribute('data-appname', game.app_name);
+
+                    var thisGame = installedList.filter(installedGame => {
+                        return installedGame.title == game.app_title
+                    });
 
                     for(var currentCell = 0; currentCell < 3; currentCell++) {
                         var newCell = newGame.insertCell(currentCell);
@@ -91,9 +130,6 @@ function checkGames() {
                                 cellBody = game.app_version;
                                 break;
                             case 2:
-                                var thisGame = installedList.filter(installedGame => {
-                                    return installedGame.title == game.app_title
-                                });
                                 if(thisGame[0]) {
                                     cellBody = 'Installed';
                                 } else {
@@ -106,6 +142,10 @@ function checkGames() {
 
                         newCell.appendChild(document.createTextNode(cellBody));
                     }
+
+                    newGame.addEventListener('click',  () => {
+                        openGameModal(newGame, game.metadata.keyImages.find(meta => meta.type === 'DieselGameBoxTall'), game.app_version, thisGame[0] ? thisGame[0].install_path : false, thisGame[0] ? thisGame[0].version : false)
+                    });
                 });
 
                 document.title = 'Heirloom v' + (JSON.parse(fs.readFileSync('./package.json')).version);

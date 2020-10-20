@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="../css/main.css"/>
     </head>
     <body>
-        <header class="row">
+        <header class="row grey darken-4">
             <div class="col s12">
                 <ul class="tabs tabs-transparent">
                     <li class="tab col s3"><a href="#homepage" class="white-text waves-effect waves-light active">Homepage</a></li>
@@ -78,6 +78,36 @@
                 <p>It is licensed under the GNU General Public License v3.0 and was developed by Autumn Rivers.</p>
                 
                 <p><a href="https://github.com/derrod/legendary" target="_blank">Legendary's GitHub Repository</a></p>
+            </div>
+
+            <div id="gameModal" class="modal modal-fixed-footer grey darken-4">
+                <div class="modal-content grey darken-3">
+
+                    <div>
+                        <div class="modalImgDiv">
+                            <img src="https://picsum.photos/150/200" alt="Placeholder Image" style="margin: auto 25px 25px auto;" width="150px" height="200px" id="gameArt"/>
+                        </div>
+
+                        <div class="modalImgOutside">
+                            <h3 id="gameModalTitle">Game Title</h3>
+                            <ul style="list-style-type: none">
+                                <li><b>Server Version: </b><span id="serverVersion">0.0.0</span></li>
+                                <li><b>Local Version: </b><span id="localVersion">n/a</span></li>
+                                <li><b>Install Location: </b><span id="gameLocation">n/a</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer grey darken-4">
+                    <a href="#" class="waves-effect waves-light blue btn-small white-text">Launch Game</a>
+                    <a href="#" class="waves-effect waves-light red btn-small white-text">Uninstall</a>
+
+                    <!-- Misc Buttons -->
+                    <a href="#" class="waves-effect waves-light green btn-small white-text">Update</a>
+                    <a href="#" class="waves-effect waves-light green btn-small white-text">Install</a>
+                    <a href="#" class="waves-effect waves-light transparent btn-small btn-flat white-text">Launch Offline</a>
+                </div>
             </div>
         </main>
     </body>

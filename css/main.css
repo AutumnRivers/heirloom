@@ -9,6 +9,10 @@ body, html {
     color: white;
 }
 
+th, td {
+    padding-right: 20px;
+}
+
 tr:hover {
     background-color: rgba(255,255,255,0.1) !important;
 }
@@ -32,9 +36,34 @@ a:link, a:hover, a:active, a:visited {
     font-weight: lighter;
 }
 
+.bold {
+    font-weight: bold;
+}
+
+.modalImgDiv {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.modalImgOutside {
+    display: inline-block;
+}
+
 #egStatus {
     font-weight: bold;
 }
+
+#games table tbody tr > :first-child {
+    transition: transform 1s;
+}
+
+#games table tbody tr > :first-child:hover {
+    transform: translate(15px, 0);
+    text-shadow: 1px 0 0 white;
+    cursor: pointer;
+}
+
+/* Materialize */
 
 .tabs .indicator {
     background: white !important;
@@ -42,8 +71,4 @@ a:link, a:hover, a:active, a:visited {
 
 .tabs .tab a.active {
     background: transparent !important;
-}
-
-.bold {
-    font-weight: bold;
 }

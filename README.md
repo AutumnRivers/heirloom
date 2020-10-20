@@ -1,5 +1,5 @@
 <center>
-    <h1>Heirloom</h1>
+    <img src="./images/HeirloomLogo.png" height="150px" width="auto">
 </center>
 
 ---

@@ -15,6 +15,7 @@ th, td {
 
 tr:hover {
     background-color: rgba(255,255,255,0.1) !important;
+    cursor: pointer;
 }
 
 thead tr:hover {
@@ -60,7 +61,6 @@ a:link, a:hover, a:active, a:visited {
 #games table tbody tr > :first-child:hover {
     transform: translate(15px, 0);
     text-shadow: 1px 0 0 white;
-    cursor: pointer;
 }
 
 /* Materialize */
@@ -71,4 +71,12 @@ a:link, a:hover, a:active, a:visited {
 
 .tabs .tab a.active {
     background: transparent !important;
+}
+
+.modal {
+    overflow: hidden !important;
+}
+
+.col > .btn {
+    width: 100%;
 }

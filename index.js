@@ -1,5 +1,5 @@
 // Entry point file
-const { app, BrowserWindow, ipcMain, Menu, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, shell, dialog } = require('electron');
 
 const Store = require('electron-store');
 const fetch = require('node-fetch');
@@ -49,6 +49,26 @@ function startup() {
     ipcMain.once('open-main-window', () => {
         openMainWindow();
         initWindow.close();
+    });
+
+    ipcMain.once('legendary-install-not-found', () => {
+        const legendaryDialog = dialog.showMessageBoxSync(initWindow, {
+            type: 'error',
+            buttons: ['Install Legendary', 'Close Heirloom'],
+            defaultId: 0,
+            title: 'Legendary Not Installed',
+            message: 'It appears Legendary is not installed on your system. This is required to run Heirloom. If you\'d like, Heirloom can install it for you!\n\nIf you still don\'t want Heirloom to do so, then you must close the application and add Legendary to your PATH. Check the repo for more information.\n\nhttps://www.github.com/AutumnRivers/Heirloom',
+            icon: './images/HeirloomError.ico',
+            cancelId: 1
+        });
+    
+        if(legendaryDialog === 0) {
+            console.log('Installing Legendary.');
+            initWindow.webContents.send('install-legendary');
+        } else {
+            console.log('Installation Aborted.');
+            app.quit();
+        }
     });
 
 }

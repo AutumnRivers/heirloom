@@ -100,13 +100,30 @@
 
                 </div>
                 <div class="modal-footer grey darken-4">
-                    <a href="#" class="waves-effect waves-light blue btn-small white-text">Launch Game</a>
-                    <a href="#" class="waves-effect waves-light red btn-small white-text">Uninstall</a>
-
-                    <!-- Misc Buttons -->
-                    <a href="#" class="waves-effect waves-light green btn-small white-text">Update</a>
-                    <a href="#" class="waves-effect waves-light green btn-small white-text">Install</a>
-                    <a href="#" class="waves-effect waves-light transparent btn-small btn-flat white-text">Launch Offline</a>
+                    <div id="gameButtons">
+                        <div class="row">
+                            <!-- Buttons to use when the game is installed -->
+                            <div class="col s3">
+                                <a href="#" class="waves-effect waves-light blue btn white-text" id="launchGameButton" class="col s3">Launch Game</a>
+                            </div>
+                            <div class="col s3">
+                                <a href="#" class="waves-effect waves-light red btn white-text" id="uninstallButton" class="col s3">Uninstall</a>
+                            </div>
+                            <!-- TODO: Hide the Update button when it's not needed -->
+                            <div class="col s3">
+                                <a href="#" class="waves-effect waves-light green btn white-text" id="updateButton" class="col s3">Update</a>
+                            </div>
+                            <div class="col s3">
+                                <a href="#" class="waves-effect waves-light transparent btn btn-flat white-text" id="launchOfflineButton" class="col s3">Launch Offline</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row" id="installButton">
+                        <div class="col s12">
+                            <a href="#" class="waves-effect waves-light green btn white-text">Install</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>

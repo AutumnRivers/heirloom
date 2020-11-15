@@ -49,10 +49,32 @@ function openGameModal(elem, gameArt, serverVer, installPath, localVer) {
         document.getElementById('localVersion').innerHTML = localVer;
         
         document.getElementById('gameLocation').innerHTML = installPath;
+
+        toggleButtons('installedGameButtons');
     } else {
         document.getElementById('localVersion').innerHTML = 'n/a';
         
         document.getElementById('gameLocation').innerHTML = 'n/a';
+
+        toggleButtons('gameNotInstalled');
+    }
+
+    function toggleButtons(buttonGroup) {
+
+        switch(buttonGroup) {
+            case 'installedGameButtons':
+                document.getElementById('installButton').style.display = 'none';
+                document.getElementById('gameButtons').style.display = 'block';
+                break;
+            case 'gameNotInstalled':
+                document.getElementById('gameButtons').style.display = 'none';
+                document.getElementById('installButton').style.display = 'block';
+                break;
+            default:
+                document.getElementById('gameButtons').style.display = 'none';
+                document.getElementById('installButton').style.display = 'block';
+        }
+
     }
 
 }

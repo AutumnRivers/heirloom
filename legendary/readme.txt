@@ -1,0 +1,1 @@
+This folder is for storing the installation of Legendary if it is required. So yes, you need this in the project files.

@@ -141,6 +141,7 @@ function openMainWindow() {
                 break;
             case 'launchgame': // Launch installed game. Arguments required.
                 if(!args || args.length === 0) return mainWindow.webContents.send('args-required');
+                spawnLegendaryConsole('launch', [args[0], args[1] == true ? '--offline' : '']);
                 break;
             case 'getinfo': // Get general information
                 spawnLegendaryConsole('status', ['--json']);
@@ -150,6 +151,7 @@ function openMainWindow() {
                 break;
             case 'installgame': // Install a game. Arguments required.
                 if(!args || args.length === 0) return mainWindow.webContents.send('args-required');
+                spawnLegendaryConsole('install', [args[0]]);
                 break;
             case 'testinstall': // Test installation of Legendary. Meant for debugging.
                 spawnLegendaryConsole('status', ['--offline', '--json']);
@@ -170,11 +172,14 @@ function openMainWindow() {
         legendaryTerminal.stdout.on('data', (data) => {
             mainWindow.webContents.send('legendary-term-data', data);
             console.info('(LEGENDARY) ' + data);
+            if(data.startsWith('Do you wish to install')) {
+                legendaryTerminal.stdin.write('y\n');
+            }
         });
     
         legendaryTerminal.stderr.on('data', (errorData) => {
             // Don't treat informational lines as errors
-            if(errorData.includes('[Core] INFO:') || errorData.includes('[cli] INFO:')) {
+            if(errorData.includes('[Core] INFO:') || errorData.includes('[cli] INFO:') || errorData.includes('[DLManager]')) {
                 mainWindow.webContents.send('legendary-term-data', errorData);
                 console.info('(LEGENDARY) ' + errorData);
                 return;

@@ -81,6 +81,8 @@
             </div>
 
             <div id="gameModal" class="modal modal-fixed-footer grey darken-4">
+                <input type="hidden" name="appname" id="appnameinput"/>
+
                 <div class="modal-content grey darken-3">
 
                     <div>
@@ -104,7 +106,7 @@
                         <div class="row">
                             <!-- Buttons to use when the game is installed -->
                             <div class="col s3">
-                                <a href="#" class="waves-effect waves-light blue btn white-text" id="launchGameButton" class="col s3">Launch Game</a>
+                                <a href="#" class="waves-effect waves-light blue btn white-text" id="launchGameButton" class="col s3" onclick="launchGame(document.getElementById('appnameinput').value, false)">Launch Game</a>
                             </div>
                             <div class="col s3">
                                 <a href="#" class="waves-effect waves-light red btn white-text" id="uninstallButton" class="col s3">Uninstall</a>
@@ -114,14 +116,34 @@
                                 <a href="#" class="waves-effect waves-light green btn white-text" id="updateButton" class="col s3">Update</a>
                             </div>
                             <div class="col s3">
-                                <a href="#" class="waves-effect waves-light transparent btn btn-flat white-text" id="launchOfflineButton" class="col s3">Launch Offline</a>
+                                <a href="#" class="waves-effect waves-light transparent btn btn-flat white-text" id="launchOfflineButton" class="col s3" onclick="launchGame(document.getElementById('appnameinput').value, true)">Offline Launch</a>
                             </div>
                         </div>
                     </div>
                     
                     <div class="row" id="installButton">
                         <div class="col s12">
-                            <a href="#" class="waves-effect waves-light green btn white-text">Install</a>
+                            <a href="#" class="waves-effect waves-light green btn white-text" onclick="installGame(document.getElementById('appnameinput').value)">Install</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="installerModal" class="modal modal-fixed-footer grey darken-4">
+                <div class="modal-content grey darken-3">
+                    <h1 class="center">Installing Game...</h1>
+                    <p class="center">Please sit tight. This may take awhile.</p>
+                    <br/>
+                    <p class="center"><span id="installProgressPercent">Unknown%</span> / 100.00% (<span id="installProgressETA">??h ??m ??s</span> left)</p>
+                    <div class="progress">
+                        <div class="indeterminate" id="installProgressBar"></div>
+                    </div>
+                </div>
+
+                <div class="modal-footer grey darken-4">
+                    <div class="row" id="cancelInstallButton">
+                        <div class="col s12">
+                            <a href="#" class="waves-effect waves-light red btn white-text">Cancel</a>
                         </div>
                     </div>
                 </div>

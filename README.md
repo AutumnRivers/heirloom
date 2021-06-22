@@ -10,6 +10,10 @@ Similar to Legendary, Heirloom is named after [the tiers of item rarity in MMORP
 
 It's, admittedly, not the best. It does a lot of hacky things and will probably break on you. But for those who are put-off by Legendary's command line interface, you can use this!
 
+![](./screenshots/Heirloom1.png)
+
+![](./screenshots/Heirloom2.png)
+
 ---
 
 * [Installing](#installing)
@@ -63,7 +67,7 @@ https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/
 
 **Q: Why am I being asked for admin privelages when installing (game)?**
 
-A: Some games require prerequisites to be installed. You know, things like DirectX. You can't install these without elevated privelages, so yeah, that's why you're being asked.
+A: Some games require prerequisites to be installed. You know, things like DirectX. You can't install these without elevated privelages, so yeah, that's why you're being asked. (NOTE: This does not happen yet (afaik), but it will in the future)
 
 
 **Q: Can I add games to my library from here?**
@@ -85,7 +89,7 @@ A: No. Legendary doesn't support Mac. You might get Heirloom to run, but it'll b
 
 A: Heirloom has a workaround for this. Legendary can't detect if a game has VR capability, but at the end of the day, it's usually just adding the `-vr` flag to the executable path.
 
-You can manually mark games in Heirloom as `VR Compatible`. This will open a new option when launching a game.
+You can manually mark games in Heirloom as `VR Compatible`. This will open a new option when launching a game. (NOTE: YOU CANNOT ACTUALLY DO THIS YET BUT YOU WILL BE ABLE TO IN THE FUTURE)
 
 
 **Q: Does this work with multiplayer?**

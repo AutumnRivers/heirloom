@@ -63,6 +63,10 @@ a:link, a:hover, a:active, a:visited {
     text-shadow: 1px 0 0 white;
 }
 
+.hidden, .hide {
+    display: none;
+}
+
 /* Materialize */
 
 .tabs .indicator {

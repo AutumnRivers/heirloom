@@ -89,6 +89,8 @@ function openMainWindow() {
         icon: './images/HeirloomIcon.ico'
     });
 
+    global.heirloomWindow = mainWindow;
+
     var menuBar = Menu.buildFromTemplate([
         {
             label: "Heirloom",
@@ -156,6 +158,9 @@ function openMainWindow() {
             case 'testinstall': // Test installation of Legendary. Meant for debugging.
                 spawnLegendaryConsole('status', ['--offline', '--json']);
                 break;
+            case 'get-auth': // Get authentication of user
+                spawnLegendaryConsole('auth');
+                break;
             default: // Failsafe
                 console.warn(chalk.yellow('Invalid Legendary Command'));
                 return mainWindow.webContents.send('invalid-command');
@@ -174,6 +179,10 @@ function openMainWindow() {
             console.info('(LEGENDARY) ' + data);
             if(data.startsWith('Do you wish to install')) {
                 legendaryTerminal.stdin.write('y\n');
+            } else if(data.startsWith('Please login via the epic web login!')) {
+                ipcMain.once('auth-token', (ev, token) => {
+                    legendaryTerminal.stdin.write(token + '\n')
+                })
             }
         });
     
@@ -182,6 +191,11 @@ function openMainWindow() {
             if(errorData.includes('[Core] INFO:') || errorData.includes('[cli] INFO:') || errorData.includes('[DLManager]')) {
                 mainWindow.webContents.send('legendary-term-data', errorData);
                 console.info('(LEGENDARY) ' + errorData);
+                if(errorData.startsWith('[cli] INFO: Successfully logged in as')) {
+                    console.log('Successful Login')
+                    heirloomWindow.webContents.send('auth-success')
+                    heirloomWindow.webContents.send('force-check')
+                }
                 return;
             } else {
                 mainWindow.webContents.send('legendary-error-data', errorData);

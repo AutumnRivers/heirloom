@@ -4,8 +4,10 @@ var fs = require('fs');
 const { ipcRenderer, remote } = require('electron');
 const { TextEncoder } = require('util');
 const shell = require('shelljs');
+const Store = require('electron-store');
 
 var gameModalElem;
+const appStorage = new Store();
 
 M.AutoInit();
 
@@ -19,6 +21,12 @@ window.addEventListener('load', () => {
 
     window.gameModalElem = M.Modal.getInstance(document.getElementById('gameModal'));
     window.installerModalElem = M.Modal.getInstance(document.getElementById('installerModal'));
+    window.authModalElem = M.Modal.getInstance(document.getElementById('authModal'))
+
+    ipcRenderer.on('force-check', () => {
+        getUserInfo();
+        checkGames();
+    })
 
     if(shell.which('legendary')) {
         document.getElementById('legendaryStatus').innerHTML = 'Installed';
@@ -28,6 +36,16 @@ window.addEventListener('load', () => {
         document.getElementById('legendaryStatus').innerHTML = 'Not Installed';
         document.title = 'Heirloom - Legendary Not Detected!';
     }
+
+    document.getElementById('logoutDiv').style.display = 'none'; // It literally won't hide any other way
+
+    document.querySelectorAll('.hidden').forEach(elem => {
+        elem.classList.remove('hidden')
+    });
+
+    document.querySelectorAll('.loading-screen').forEach(elem => {
+        elem.classList.add('hidden')
+    });
 });
 
 // //
@@ -94,6 +112,21 @@ ipcRenderer.on('legendary-error-data', (ev,err) => {
 
 // //
 
+function getEpicToken() {
+    ipcRenderer.send('use-legendary', 'get-auth');
+
+    authModalElem.open()
+}
+
+function saveEpicToken() {
+    const authToken = document.getElementById('authToken').value;
+    ipcRenderer.send('auth-token', authToken);
+    ipcRenderer.once('auth-success', () => {
+        authModalElem.close()
+        appStorage.set('epicAuth', authToken);
+    })
+}
+
 function getUserInfo() {
     ipcRenderer.send('use-legendary', 'getinfo');
 
@@ -102,10 +135,14 @@ function getUserInfo() {
     function parseUserInfo(ev, data) {
         if(data.startsWith('{')) {
             let userInfo = JSON.parse(data);
+            if(userInfo.account == '<not logged in>') return;
 
             document.getElementById('installedGamesNo').innerHTML = userInfo.games_installed;
             document.getElementById('ownedGamesNo').innerHTML = userInfo.games_available;
             document.getElementById('accountStatus').innerHTML = `You are logged in as ${userInfo.account}`;
+
+            document.getElementById('loginDiv').style.display = 'none';
+            document.getElementById('logoutDiv').style.display = 'block';
 
             ipcRenderer.removeListener('legendary-term-data', parseUserInfo);
         }

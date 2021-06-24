@@ -50,23 +50,77 @@
 
             <!-- Games List -->
             <div id="games">
-                <table class="highlight" id="gamesTable">
-                    <thead>
-                        <tr>
-                            <th>Game Title</th>
-                            <th>Version</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
+                <div class="col s12 loading-screen">
+                    <h3 class="center"><span class="heirloomLogo">Heirloom</span> is loading...</h3>
+                    <div class="progress">
+                        <div class="indeterminate"></div>
+                    </div>    
+                </div>
+                <div class="hidden">
+                    <table class="highlight" id="gamesTable">
+                        <thead>
+                            <tr>
+                                <th>Game Title</th>
+                                <th>Version</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
 
-                    <tbody>
-                    </tbody>
-                </table>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Application Settings -->
             <div id="settings">
+                <div class="col s12 loading-screen">
+                    <h3 class="center"><span class="heirloomLogo">Heirloom</span> is loading...</h3>
+                    <div class="progress">
+                        <div class="indeterminate"></div>
+                    </div>    
+                </div>
+                <div class="hidden">
+                    <form action="#" class="col s12">
+                        <div class="row" id="loginDiv">
+                            <a class="waves-effect waves-light btn white-text col s12" onclick="getEpicToken();">Login To Epic Games</a>
+                        </div>
+                        <div class="row" id="logoutDiv">
+                            <a class="waves-effect waves-light red btn white-text col s12" onclick="removeEpicAuth();">Logout</a>
+                        </div>
 
+                        <hr/>
+
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="authToken" type="password" placeholder="C:\Users\USERNAME\legendary\"/>
+                                <label for="authToken">Default Install Location</label>
+                            </div>
+                        </div>
+                    </form>
+    
+                    <div id="authModal" class="modal grey darken-4">
+                        <div class="modal-content grey darken-3">
+    
+                            <div class="row">
+                                <h1 class="center">Epic Games Auth</h1>
+                                <p>Please type your auth token in the text field below.</p>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="authToken" type="password"/>
+                                    <label for="authToken">Auth Token Here</label>
+                                </div>
+                            </div>
+    
+                        </div>
+                        <div class="modal-footer grey darken-4">
+    
+                            <a class="waves-effect waves-light btn white-text" onclick="saveEpicToken();">Save Token</a>
+    
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- 'About' Section -->

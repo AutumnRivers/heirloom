@@ -20,7 +20,7 @@
   "devDependencies": {
     "electron-builder": "^22.9.1",
     "electron-rebuild": "^2.2.0",
-    "electron": "^10.1.3"
+    "electron": "^10.2.0"
   },
   "//": "You may need to install windows-build-tools to compile.",
   "build": {

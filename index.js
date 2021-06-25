@@ -153,7 +153,11 @@ function openMainWindow() {
                 break;
             case 'installgame': // Install a game. Arguments required.
                 if(!args || args.length === 0) return mainWindow.webContents.send('args-required');
-                spawnLegendaryConsole('install', [args[0]]);
+                spawnLegendaryConsole('install', [args[0], `--base-path ${appStorage.get('prefs.install_location')}`]);
+                break;
+            case 'uninstallgame':
+                if(!args || args.length === 0) return mainWindow.webContents.send('args-required');
+                spawnLegendaryConsole('uninstall', [args[0]]);
                 break;
             case 'testinstall': // Test installation of Legendary. Meant for debugging.
                 spawnLegendaryConsole('status', ['--offline', '--json']);
@@ -177,7 +181,7 @@ function openMainWindow() {
         legendaryTerminal.stdout.on('data', (data) => {
             mainWindow.webContents.send('legendary-term-data', data);
             console.info('(LEGENDARY) ' + data);
-            if(data.startsWith('Do you wish to install')) {
+            if(data.startsWith('Do you wish to install') || data.startsWith('Do you wish to uninstall')) {
                 legendaryTerminal.stdin.write('y\n');
             } else if(data.startsWith('Please login via the epic web login!')) {
                 ipcMain.once('auth-token', (ev, token) => {

@@ -20,30 +20,38 @@
 
             <!-- Homepage -->
             <div id="homepage">
-                <h2 class="center">Welcome back to <span class="heirloomLogo">Heirloom</span>.</h2>
-                <p class="center">Epic Games is currently <span id="egStatus">UKNOWN</span>.</p>
-
-                <hr/>
-
-                <div class="row">
-                    <div class="col s12">
-                        <div class="col s6">
-                            <h3>Status</h3>
-                            <p>You currently have <b id="installedGamesNo">0</b> installed games.</p>
-                            <p>You currently own <b id="ownedGamesNo">0</b> games.</p>
-                        </div>
-                        <div class="col s6" style="text-align: right;">
-                            <h3>System</h3>
-                            <p>Legendary is <b id="legendaryStatus">...</b>.</p>
+                <div class="col s12 loading-screen">
+                    <h3 class="center"><span class="heirloomLogo">Heirloom</span> is loading...</h3>
+                    <div class="progress">
+                        <div class="indeterminate"></div>
+                    </div>    
+                </div>
+                <div class="hidden">
+                    <h2 class="center">Welcome back to <span class="heirloomLogo">Heirloom</span>.</h2>
+                    <p class="center">Epic Games is currently <span id="egStatus">UKNOWN</span>.</p>
+    
+                    <hr/>
+    
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="col s6">
+                                <h3>Status</h3>
+                                <p>You currently have <b id="installedGamesNo">0</b> installed games.</p>
+                                <p>You currently own <b id="ownedGamesNo">0</b> games.</p>
+                            </div>
+                            <div class="col s6" style="text-align: right;">
+                                <h3>System</h3>
+                                <p>Legendary is <b id="legendaryStatus">...</b>.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="center">
-                    <h4 id="accountStatus">You are not currently logged in.</h4>
-                    <div id="accountButtons" style="display: none;">
-                        <p><a href="#" class="waves-effect waves-light btn-flat white-text">Switch User</a></p>
-                        <p><a href="#" class="waves-effect waves-light btn-flat white-text">Log Out</a></p>
+    
+                    <div class="center">
+                        <h4 id="accountStatus">You are not currently logged in.</h4>
+                        <div id="accountButtons" style="display: none;">
+                            <p><a href="#" class="waves-effect waves-light btn-flat white-text">Switch User</a></p>
+                            <p><a href="#" class="waves-effect waves-light btn-flat white-text">Log Out</a></p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -82,20 +90,31 @@
                 </div>
                 <div class="hidden">
                     <form action="#" class="col s12">
-                        <div class="row" id="loginDiv">
-                            <a class="waves-effect waves-light btn white-text col s12" onclick="getEpicToken();">Login To Epic Games</a>
-                        </div>
-                        <div class="row" id="logoutDiv">
-                            <a class="waves-effect waves-light red btn white-text col s12" onclick="removeEpicAuth();">Logout</a>
+                        
+                        <div class="row">
+                            <h5>Account Management</h5>
+                            <div class="col s12" id="loginDiv">
+                                <a class="waves-effect waves-light btn white-text" onclick="getEpicToken();">Login To Epic Games</a>
+                            </div>
+                            <div class="col s12" id="logoutDiv">
+                                <a class="waves-effect waves-light red btn white-text" onclick="removeEpicAuth();">Logout</a>
+                            </div>
                         </div>
 
                         <hr/>
 
                         <div class="row">
-                            <div class="input-field col s12">
-                                <input id="authToken" type="password" placeholder="C:\Users\USERNAME\legendary\"/>
-                                <label for="authToken">Default Install Location</label>
+                            <h5>Default Install Location for Games</h5>
+                            <div class="file-field input-field">
+                                <div class="btn">
+                                    <span>Select Folder</span>
+                                    <input type="file" onclick="selectInstallLocation();"/>
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="white-text" id="installLocation" type="text">
+                                </div>
                             </div>
+                            <a class="waves-effect waves-light green btn white-text" onclick="setInstallLocation()">Save Install Location</a>
                         </div>
                     </form>
     
@@ -163,11 +182,11 @@
                                 <a href="#" class="waves-effect waves-light blue btn white-text" id="launchGameButton" class="col s3" onclick="launchGame(document.getElementById('appnameinput').value, false)">Launch Game</a>
                             </div>
                             <div class="col s3">
-                                <a href="#" class="waves-effect waves-light red btn white-text" id="uninstallButton" class="col s3">Uninstall</a>
+                                <a href="#" class="waves-effect waves-light red btn white-text" id="uninstallButton" class="col s3" onclick="uninstallGame(document.getElementById('appnameinput').value)">Uninstall</a>
                             </div>
                             <!-- TODO: Hide the Update button when it's not needed -->
                             <div class="col s3">
-                                <a href="#" class="waves-effect waves-light green btn white-text" id="updateButton" class="col s3">Update</a>
+                                <a href="#" class="waves-effect waves-light green btn white-text" id="updateButton" class="col s3" onclick="installGame(document.getElementById('appnameinput').value)">Update</a>
                             </div>
                             <div class="col s3">
                                 <a href="#" class="waves-effect waves-light transparent btn btn-flat white-text" id="launchOfflineButton" class="col s3" onclick="launchGame(document.getElementById('appnameinput').value, true)">Offline Launch</a>

@@ -2,9 +2,11 @@ var M = require('materialize-css');
 const epicGamesStatus = require('epicgames-status');
 var fs = require('fs');
 const { ipcRenderer, remote } = require('electron');
+const {dialog} = require('electron').remote;
 const { TextEncoder } = require('util');
 const shell = require('shelljs');
 const Store = require('electron-store');
+const { constants } = require('buffer');
 
 var gameModalElem;
 const appStorage = new Store();
@@ -46,11 +48,37 @@ window.addEventListener('load', () => {
     document.querySelectorAll('.loading-screen').forEach(elem => {
         elem.classList.add('hidden')
     });
+
+    document.getElementById('installLocation').value = appStorage.get('prefs.install_location')
 });
 
 // //
 
+function selectInstallLocation() {
+    dialog.showOpenDialog({
+        properties: ['openDirectory'],
+        message: 'Select default installation for Heirloom games...'
+    }).then(path => {
+        console.log(path);
+        document.getElementById('installLocation').value = path.filePaths[0];
+    })
+}
+
+function setInstallLocation()  {
+    const installPath = document.getElementById('installLocation').value;
+    if(!installPath) return;
+    fs.access(installPath, constants.F_OK, err => {
+        if(err) return console.error(err);
+        appStorage.set('prefs.install_location', installPath + '\\');
+        M.toast({html: `Successfully saved your install location to ${installPath}!`, classes: ['green']})
+    })
+}
+
+// //
+
 function openGameModal(elem, gameArt, serverVer, installPath, localVer, appName) {
+
+    if(serverVer == localVer) {document.getElementById('updateButton').style.display = 'none';} else {document.getElementById('updateButton').style.display = 'block';}
 
     gameModalElem.open();
 
@@ -125,6 +153,10 @@ function saveEpicToken() {
         authModalElem.close()
         appStorage.set('epicAuth', authToken);
     })
+}
+
+function savePreferences() {
+    appStorage.set('prefs.install_location', document.getElementById(''))
 }
 
 function getUserInfo() {
@@ -262,6 +294,24 @@ function installGame(gameID) {
                 document.getElementById('installProgressBar').style.width = `${Math.floor(percentProgress)}%`
             }
         } else if(data.startsWith('[cli] INFO: Finished installation process')) {
+            installerModalElem.close();
+            gameModalElem.close();
+            var tableHeaderRowCount = 1;
+            var table = document.getElementById('gamesTable');
+            var rowCount = table.rows.length;
+            for (var i = tableHeaderRowCount; i < rowCount; i++) {
+                table.deleteRow(tableHeaderRowCount);
+            }
+            checkGames();
+        }
+    })
+}
+
+function uninstallGame(gameID) {
+    ipcRenderer.send('use-legendary', 'uninstallgame', [gameID]);
+
+    ipcRenderer.on('legendary-term-data', (ev, data) => {
+        if(data.startsWith('[cli] INFO: Game has been uninstalled.')) {
             installerModalElem.close();
             gameModalElem.close();
             var tableHeaderRowCount = 1;

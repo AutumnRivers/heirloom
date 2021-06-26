@@ -49,6 +49,12 @@ window.addEventListener('load', () => {
         elem.classList.add('hidden')
     });
 
+    if(process.env.HEIRLOOM_ENV == 'dev') {
+        document.querySelectorAll('.hide-dev').forEach(elem => {
+            elem.classList.remove('hide-dev')
+        });
+    }
+
     document.getElementById('installLocation').value = appStorage.get('prefs.install_location')
 });
 
@@ -126,6 +132,14 @@ function openGameModal(elem, gameArt, serverVer, installPath, localVer, appName)
 
     }
 
+}
+
+function getDebugInfo() {
+    ipcRenderer.send('get-debug-info')
+
+    ipcRenderer.on('debug-info', (ev, debug) => {
+        document.getElementById('debugInfo').innerHTML = debug;
+    })
 }
 
 // //

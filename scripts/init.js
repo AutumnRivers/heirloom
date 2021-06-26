@@ -39,18 +39,9 @@ function installLegendary() {
                 document.getElementById('percentDownload').innerHTML = +percentDownloaded.toFixed(2);
 
                 if(totalDataWritten == legendarySize) {
-                    addLegendaryToPATH();
+                    ipcRenderer.send('open-main-window');
                 }
             });
         });
     });
-}
-
-function addLegendaryToPATH() {
-    const { ipcRenderer } = require('electron');
-    ipcRenderer.send('add-legendary-to-path');
-
-    ipcRenderer.once('legendary-added-to-path', () => {
-        ipcRenderer.send('open-main-window');
-    })
 }

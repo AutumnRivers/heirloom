@@ -7,6 +7,7 @@ const unixShell = require('shelljs');
 const chalk = require('chalk'); // Chalk is used to color the command line, make it look pretty.
 const fs = require('fs');
 const childProcess = require('child_process');
+const main = require('epicgames-status');
 
 const cliArgs = process.argv.slice(2);
 const appStorage = new Store();
@@ -70,35 +71,6 @@ function startup() {
             app.quit();
         }
     });
-
-    ipcMain.once('add-legendary-to-path', () => {
-        const currentPath = process.env.PATH;
-        const legendaryPath = __dirname + '\\legendary\\'
-        const newPath = currentPath.concat(';' + __dirname + '\\legendary\\');
-
-        var pathResult = childProcess.spawnSync('setx', ['-m', 'PATH', newPath]);
-
-        console.log(newPath);
-
-        var pathData = pathResult.stdout.toString();
-        var pathError = pathResult.stderr.toString();
-
-        if(pathError === '') {
-            initWindow.webContents.send('legendary-added-to-path');
-            console.log('Successfully set PATH to include Legendary');
-        } else {
-            console.error('Error when adding Legendary to PATH: ' + pathError);
-            var errorDialog = dialog.showMessageBoxSync(initWindow, {
-                type: 'error',
-                buttons: ['Close Heirloom'],
-                defaultId: 0,
-                title: 'An error occured',
-                message: 'An error occured when adding Legendary to your PATH. This is most likely caused by not providing admin privelages. Please restart Heirloom with the admin/sudo account.\n\nYou may also just be better off adding Legendary to the PATH yourself. You can read the README for more info.\nLegendary path: ' + legendaryPath +'\n' + pathError,
-                icon: './images/HeirloomError.ico',
-            });
-            app.quit();
-        }
-    })
 
 }
 
@@ -201,11 +173,14 @@ function openMainWindow() {
 
     });
 
+    var legendaryCmd = __dirname + '\\legendary\\legendary.exe'
+    if(unixShell.which('legendary')) legendaryCmd = 'legendary'
+
     function spawnLegendaryConsole(command, args) {
         // TODO: Use a package to actually spawn a window with this if enabled
         // --enable-terminal / -t
         if(typeof args === 'object') args = args.join(' ');
-        var legendaryTerminal = childProcess.exec(`legendary ${command} ${args}`);
+        var legendaryTerminal = childProcess.exec(`"${legendaryCmd}" ${command} ${args}`);
     
         legendaryTerminal.stdout.on('data', (data) => {
             mainWindow.webContents.send('legendary-term-data', data);
@@ -245,6 +220,11 @@ function openMainWindow() {
         event.preventDefault();
         shell.openExternal(url);
     });
+
+    ipcMain.on('get-debug-info', () => {
+        const os = require('os');
+        mainWindow.webContents.send('debug-info', `Platform: ${os.type()} ${os.arch()}<br/>Legendary CMD: ${legendaryCmd}<br/>Legendary Version: ${childProcess.spawnSync('legendary', ['--version']).output[1]}`)
+    })
 
 }
 

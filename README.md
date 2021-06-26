@@ -31,7 +31,7 @@ You can find binaries in the "Releases" tab of this GitHub repo.
 
 ### Using an existing install of [Legendary]
 
-Heirloom will install Legendary to your machine and even add it to your PATH for you! But, wait, what if you already installed Legendary in the past?
+Heirloom will install Legendary to your machine for you! But, wait, what if you already installed Legendary in the past?
 
 If you've added Legendary to your PATH, then you're already done. If you haven't... well, get on that.
 

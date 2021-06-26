@@ -116,6 +116,13 @@
                             </div>
                             <a class="waves-effect waves-light green btn white-text" onclick="setInstallLocation()">Save Install Location</a>
                         </div>
+
+                        <hr class="hide-dev"/>
+
+                        <div class="row hide-dev">
+                            <h5>Development</h5>
+                            <a class="waves-effect waves-light btn white-text col s12" onclick="M.Modal.getInstance(document.getElementById('debugModal')).open(); getDebugInfo();">Open Debug Menu</a>
+                        </div>
                     </form>
     
                     <div id="authModal" class="modal grey darken-4">
@@ -136,6 +143,21 @@
                         <div class="modal-footer grey darken-4">
     
                             <a class="waves-effect waves-light btn white-text" onclick="saveEpicToken();">Save Token</a>
+    
+                        </div>
+                    </div>
+
+                    <div id="debugModal" class="modal grey darken-4">
+                        <div class="modal-content grey darken-3">
+
+                            <div class="row">
+                                <h1>Debug</h1>
+                                <p id="debugInfo">How did you get here?</p>
+                            </div>
+                        </div>
+                        <div class="modal-footer grey darken-4">
+    
+                            <a class="waves-effect waves-light btn white-text modal-close">Close</a>
     
                         </div>
                     </div>

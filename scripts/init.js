@@ -47,12 +47,10 @@ function installLegendary() {
 }
 
 function addLegendaryToPATH() {
-    // TODO: Add code that will add Legendary to the PATH
-    // Code needs to work on BOTH PowerShell and Command Prompt
-    // Or at least detect the current shell to switch to Command Prompt
-    // Made the mistake of trying to use %PATH% on PowerShell.
-    // Never again.    
-
     const { ipcRenderer } = require('electron');
-    ipcRenderer.send('open-main-window');
+    ipcRenderer.send('add-legendary-to-path');
+
+    ipcRenderer.once('legendary-added-to-path', () => {
+        ipcRenderer.send('open-main-window');
+    })
 }

@@ -71,6 +71,35 @@ function startup() {
         }
     });
 
+    ipcMain.once('add-legendary-to-path', () => {
+        const currentPath = process.env.PATH;
+        const legendaryPath = __dirname + '\\legendary\\'
+        const newPath = currentPath.concat(';' + __dirname + '\\legendary\\');
+
+        var pathResult = childProcess.spawnSync('setx', ['-m', 'PATH', newPath]);
+
+        console.log(newPath);
+
+        var pathData = pathResult.stdout.toString();
+        var pathError = pathResult.stderr.toString();
+
+        if(pathError === '') {
+            initWindow.webContents.send('legendary-added-to-path');
+            console.log('Successfully set PATH to include Legendary');
+        } else {
+            console.error('Error when adding Legendary to PATH: ' + pathError);
+            var errorDialog = dialog.showMessageBoxSync(initWindow, {
+                type: 'error',
+                buttons: ['Close Heirloom'],
+                defaultId: 0,
+                title: 'An error occured',
+                message: 'An error occured when adding Legendary to your PATH. This is most likely caused by not providing admin privelages. Please restart Heirloom with the admin/sudo account.\n\nYou may also just be better off adding Legendary to the PATH yourself. You can read the README for more info.\nLegendary path: ' + legendaryPath +'\n' + pathError,
+                icon: './images/HeirloomError.ico',
+            });
+            app.quit();
+        }
+    })
+
 }
 
 function openMainWindow() {

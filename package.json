@@ -7,20 +7,21 @@
   "author": "Autumn Rivers (natirivers@protonmail.ch)",
   "license": "GPL-3.0",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "startasadmin": "electron . --win32metadata.requested-execution-level=requireAdministrator"
   },
   "dependencies": {
     "chalk": "^4.1.0",
     "electron-store": "^6.0.1",
+    "epicgames-status": "^1.0.3",
     "materialize-css": "^1.0.0",
     "node-fetch": "^2.6.1",
-    "shelljs": "^0.8.4",
-    "epicgames-status": "^1.0.3"
+    "shelljs": "^0.8.4"
   },
   "devDependencies": {
+    "electron": "^10.2.0",
     "electron-builder": "^22.9.1",
-    "electron-rebuild": "^2.2.0",
-    "electron": "^10.2.0"
+    "electron-rebuild": "^2.2.0"
   },
   "//": "You may need to install windows-build-tools to compile.",
   "build": {

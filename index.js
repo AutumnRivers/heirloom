@@ -45,7 +45,7 @@ function startup() {
 
     console.log('\033[2J');
 
-    console.log(`Welcome to Heirloom v${JSON.parse(fs.readFileSync('./package.json')).version}!\nAll output will be logged here.\n-----\n`);
+    console.log(`Welcome to Heirloom v${app.getVersion()}!\nAll output will be logged here.\n-----\n`);
 
     ipcMain.once('open-main-window', () => {
         openMainWindow();
@@ -102,13 +102,19 @@ function openMainWindow() {
                         mainWindow.webContents.send('navigate-to-settings');
                     }
                 },
-                process.env.NODE_ENV === 'dev' ? {"label": "Inspect", click() { mainWindow.webContents.openDevTools(); }} : {"type":"separator"},
+                process.env.HEIRLOOM_ENV === 'dev' ? {"label": "Inspect", click() { mainWindow.webContents.openDevTools(); }} : {"type":"separator"},
                 {
                     label: "Send Test Signal (Dev)",
                     click() {
                         spawnLegendaryConsole('status', ['--offline', '--json']);
                     },
                     visible: process.env.NODE_ENV === 'dev'
+                },
+                {
+                    label: "Force Refresh",
+                    click() {
+                        mainWindow.webContents.send('force-check');
+                    }
                 },
                 {
                     label: "Quit",
@@ -166,6 +172,9 @@ function openMainWindow() {
             case 'get-auth': // Get authentication of user
                 spawnLegendaryConsole('auth');
                 break;
+            case 'remove-auth': // Remove authentication
+                spawnLegendaryConsole('auth', ['--delete']);
+                break;
             default: // Failsafe
                 console.warn(chalk.yellow('Invalid Legendary Command'));
                 return mainWindow.webContents.send('invalid-command');
@@ -193,6 +202,11 @@ function openMainWindow() {
                 })
             }
         });
+
+        if(args == '--delete') {
+            console.log('User logged out')
+            mainWindow.webContents.send('force-check');
+        }
     
         legendaryTerminal.stderr.on('data', (errorData) => {
             // Don't treat informational lines as errors

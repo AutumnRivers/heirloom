@@ -8,7 +8,8 @@
   "license": "GPL-3.0",
   "scripts": {
     "start": "electron .",
-    "startasadmin": "electron . --win32metadata.requested-execution-level=requireAdministrator"
+    "build64": "electron-builder -w nsis --x64",
+    "build64portable": "electron-builder -w zip --x64"
   },
   "dependencies": {
     "chalk": "^4.1.0",
@@ -19,8 +20,8 @@
     "shelljs": "^0.8.4"
   },
   "devDependencies": {
-    "electron": "^10.2.0",
-    "electron-builder": "^22.9.1",
+    "electron": "^10.4.6",
+    "electron-builder": "^22.11.7",
     "electron-rebuild": "^2.2.0"
   },
   "//": "You may need to install windows-build-tools to compile.",
@@ -43,15 +44,16 @@
     ],
     "appId": "autumnrivers.heirloom",
     "copyright": "Copyright © 2020 Autumn Rivers",
-    "productName": "Heirloom"
-  },
-  "win": {
-    "icon": "./images/HeirloomIcon.ico"
-  },
-  "nsis": {
-    "oneClick": false,
-    "allowToChangeInstallationDirectory": true,
-    "artifactName": "${productName} v${version} Installer.${ext}",
-    "menuCategory": "Games"
+    "productName": "Heirloom",
+    "win": {
+      "asar": true
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "${productName} v${version} Installer.${ext}",
+      "menuCategory": "Games",
+      "installerIcon": "./installerIcon.ico"
+    }
   }
 }

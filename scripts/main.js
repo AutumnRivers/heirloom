@@ -169,6 +169,10 @@ function saveEpicToken() {
     })
 }
 
+function removeEpicAuth() {
+    ipcRenderer.send('use-legendary', 'remove-auth');
+}
+
 function savePreferences() {
     appStorage.set('prefs.install_location', document.getElementById(''))
 }
@@ -181,16 +185,31 @@ function getUserInfo() {
     function parseUserInfo(ev, data) {
         if(data.startsWith('{')) {
             let userInfo = JSON.parse(data);
-            if(userInfo.account == '<not logged in>') return;
 
-            document.getElementById('installedGamesNo').innerHTML = userInfo.games_installed;
-            document.getElementById('ownedGamesNo').innerHTML = userInfo.games_available;
-            document.getElementById('accountStatus').innerHTML = `You are logged in as ${userInfo.account}`;
+            if(userInfo.account == '<not logged in>') {
+                document.getElementById('loginDiv').style.display = 'block';
+                document.getElementById('logoutDiv').style.display = 'none';
 
-            document.getElementById('loginDiv').style.display = 'none';
-            document.getElementById('logoutDiv').style.display = 'block';
+                document.getElementById('installedGamesNo').innerHTML = 0;
+                document.getElementById('ownedGamesNo').innerHTML = 0;
+                document.getElementById('accountStatus').innerHTML = `You are not currently logged in.`;
 
-            ipcRenderer.removeListener('legendary-term-data', parseUserInfo);
+                var tableHeaderRowCount = 1;
+                var table = document.getElementById('gamesTable');
+                var rowCount = table.rows.length;
+                for (var i = tableHeaderRowCount; i < rowCount; i++) {
+                    table.deleteRow(tableHeaderRowCount);
+                }
+            } else {
+                document.getElementById('installedGamesNo').innerHTML = userInfo.games_installed;
+                document.getElementById('ownedGamesNo').innerHTML = userInfo.games_available;
+                document.getElementById('accountStatus').innerHTML = `You are logged in as ${userInfo.account}`;
+    
+                document.getElementById('loginDiv').style.display = 'none';
+                document.getElementById('logoutDiv').style.display = 'block';
+    
+                ipcRenderer.removeListener('legendary-term-data', parseUserInfo);
+            };
         }
     }
 }

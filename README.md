@@ -57,7 +57,9 @@ https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/
 3. Run [yarn](https://yarnpkg.com/): `yarn`
     * NPM can also be used, but not recommended: `npm install`
 4. Run the application: `yarn start` / `npm start`
-5. Build the application: `yarn run build64` / `npm run build64`
+5. Build the application:
+    * Build NSIS Installer: `yarn build64` / `npm run build64`
+    * Build Win x64 Portable: `yarn build64portable` / `npm run build64portable`
 6. ???
 7. Profit!
 

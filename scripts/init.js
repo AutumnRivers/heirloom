@@ -1,5 +1,4 @@
 const { ipcRenderer } = require('electron');
-const shell = require('child_process');
 const unix = require('shelljs');
 
 if(unix.which('legendary')) {

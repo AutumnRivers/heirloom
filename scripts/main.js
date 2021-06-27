@@ -276,7 +276,7 @@ function checkGames() {
                     });
                 });
 
-                document.title = 'Heirloom v' + (JSON.parse(fs.readFileSync('./package.json')).version);
+                document.title = 'Heirloom v' + (remote.app.getVersion());
 
                 ipcRenderer.removeListener('legendary-term-data', getInstalledGamesAndSetTable);
 

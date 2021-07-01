@@ -84,3 +84,7 @@ a:link, a:hover, a:active, a:visited {
 .col > .btn {
     width: 100%;
 }
+
+#gameModal .modal-footer {
+    height: 110px !important;
+}

@@ -10,7 +10,12 @@ const childProcess = require('child_process');
 const main = require('epicgames-status');
 
 const cliArgs = process.argv.slice(2);
-const appStorage = new Store();
+const appStorage = new Store({
+    defaults: {
+        'prefs.install_location': 'C:\\legendary\\',
+        'epicAuth': undefined
+    }
+});
 
 function startup() {
 
@@ -71,6 +76,19 @@ function startup() {
             app.quit();
         }
     });
+
+    ipcMain.once('get-legendary-version', () => {
+        var legendaryCmd = __dirname + '\\legendary\\legendary.exe'
+        if(unixShell.which('legendary')) legendaryCmd = 'legendary'
+
+        console.log(legendaryCmd)
+
+        var legendaryTerminal = childProcess.exec(`"${legendaryCmd}" --version`);
+
+        legendaryTerminal.stdout.on('data', (version) => {
+            initWindow.webContents.send('legendary-version', version);
+        })
+    })
 
 }
 
@@ -157,6 +175,7 @@ function openMainWindow() {
                 break;
             case 'verifyfiles': // Verify files of a game. Arguments required.
                 if(!args || args.length === 0) return mainWindow.webContents.send('args-required');
+                spawnLegendaryConsole('verify-game', [args[0]]);
                 break;
             case 'installgame': // Install a game. Arguments required.
                 if(!args || args.length === 0) return mainWindow.webContents.send('args-required');
@@ -237,7 +256,7 @@ function openMainWindow() {
 
     ipcMain.on('get-debug-info', () => {
         const os = require('os');
-        mainWindow.webContents.send('debug-info', `Platform: ${os.type()} ${os.arch()}<br/>Legendary CMD: ${legendaryCmd}<br/>Legendary Version: ${childProcess.spawnSync('legendary', ['--version']).output[1]}`)
+        mainWindow.webContents.send('debug-info', `Platform: ${os.type()} ${os.arch()}<br/>Legendary CMD: ${legendaryCmd} (${legendaryCmd == 'legendary' ? 'Existing w/ PATH' : 'Heirloom Install'})<br/>Legendary Version: ${childProcess.execSync(`"${legendaryCmd}" --version`)}`)
     })
 
 }

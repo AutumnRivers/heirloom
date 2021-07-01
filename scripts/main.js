@@ -9,7 +9,12 @@ const Store = require('electron-store');
 const { constants } = require('buffer');
 
 var gameModalElem;
-const appStorage = new Store();
+const appStorage = new Store({
+    defaults: {
+        'prefs.install_location': 'C:\\legendary\\',
+        'epicAuth': undefined
+    }
+});
 
 M.AutoInit();
 
@@ -24,6 +29,7 @@ window.addEventListener('load', () => {
     window.gameModalElem = M.Modal.getInstance(document.getElementById('gameModal'));
     window.installerModalElem = M.Modal.getInstance(document.getElementById('installerModal'));
     window.authModalElem = M.Modal.getInstance(document.getElementById('authModal'))
+    window.verifyModalElem = M.Modal.getInstance(document.getElementById('verifyModal'))
 
     ipcRenderer.on('force-check', () => {
         getUserInfo();
@@ -84,7 +90,7 @@ function setInstallLocation()  {
 
 function openGameModal(elem, gameArt, serverVer, installPath, localVer, appName) {
 
-    if(serverVer == localVer) {document.getElementById('updateButton').style.display = 'none';} else {document.getElementById('updateButton').style.display = 'block';}
+    if(serverVer == localVer) {document.getElementById('updateButton').classList.add('disabled');} else {document.getElementById('updateButton').classList.remove('disabled');}
 
     gameModalElem.open();
 
@@ -194,6 +200,8 @@ function getUserInfo() {
                 document.getElementById('ownedGamesNo').innerHTML = 0;
                 document.getElementById('accountStatus').innerHTML = `You are not currently logged in.`;
 
+                document.getElementById('globalSyncSavesButton').classList.add('disabled');
+
                 var tableHeaderRowCount = 1;
                 var table = document.getElementById('gamesTable');
                 var rowCount = table.rows.length;
@@ -207,6 +215,7 @@ function getUserInfo() {
     
                 document.getElementById('loginDiv').style.display = 'none';
                 document.getElementById('logoutDiv').style.display = 'block';
+                document.getElementById('globalSyncSavesButton').classList.remove('disabled');
     
                 ipcRenderer.removeListener('legendary-term-data', parseUserInfo);
             };
@@ -299,7 +308,7 @@ function launchGame(gameID, isOffline) {
     })
 }
 
-function installGame(gameID) {
+function installGame(gameID, gameName) {
     ipcRenderer.send('use-legendary', 'installgame', [gameID]);
 
     installerModalElem.open();
@@ -327,6 +336,10 @@ function installGame(gameID) {
                 document.getElementById('installProgressBar').style.width = `${Math.floor(percentProgress)}%`
             }
         } else if(data.startsWith('[cli] INFO: Finished installation process')) {
+            var successSound = new Audio('../audio/success.wav');
+            new Notification('Game Installed', {body: `${gameName} has been installed. Click to play!`})
+                .onclick = () => { launchGame(gameID) }
+            successSound.play()
             installerModalElem.close();
             gameModalElem.close();
             var tableHeaderRowCount = 1;
@@ -354,6 +367,49 @@ function uninstallGame(gameID) {
                 table.deleteRow(tableHeaderRowCount);
             }
             checkGames();
+        }
+    })
+}
+
+function verifyGame(gameID) {
+    ipcRenderer.send('use-legendary', 'verifyfiles', [gameID]);
+
+    verifyModalElem.open();
+
+    ipcRenderer.on('legendary-term-data', (ev, data) => {
+        if(data.startsWith('Verification progress:')) {
+            var files;
+            files = data.split('Verification progress: ')[1];
+            files = files.split('(')[0];
+            files = files.split('/');
+
+            var percentProgress = (parseInt(files[0]) / parseInt(files[1])) * 100
+
+            document.getElementById('verifyProgressBar').classList.remove('indeterminate');
+            document.getElementById('verifyProgressBar').classList.add('determinate');
+
+            document.getElementById('verifiedFiles').innerHTML = files[0];
+            document.getElementById('totalFilesToVerify').innerHTML = files[1];
+            document.getElementById('verifyProgressBar').style.width = `${Math.floor(percentProgress)}%`
+        } else if(data.startsWith('[cli] INFO: Verification finished successfully.')) {
+            alert("All files successfully verified.");
+            verifyModalElem.close();
+        } else if(data.startsWith('[cli] ERROR: Verification failed')) {
+            var verifyFailedDialog = remote.dialog.showMessageBoxSync(remote.getCurrentWindow(), {
+                type: 'error',
+                buttons: ['Repair Game', 'Ignore'],
+                defaultId: 0,
+                title: 'Verification Failed!',
+                message: `The file verification for AppName:${gameID} failed. If you want, Heirloom can use Legendary to repair your files for you. Or, you can continue on.`,
+                icon: './images/HeirloomError.ico',
+                cancelId: 1
+            })
+
+            if(verifyFailedDialog === 0) {
+                ipcRenderer.send('use-legendary', 'repairgame', [gameID]);
+            }
+
+            verifyModalElem.close()
         }
     })
 }

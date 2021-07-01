@@ -53,6 +53,14 @@
                             <p><a href="#" class="waves-effect waves-light btn-flat white-text">Log Out</a></p>
                         </div>
                     </div>
+
+                    <hr/><br/>
+
+                    <div class="row">
+                        <div class="col s12">
+                            <a href="#" class="waves-effect waves-light green btn white-text disabled" id="globalSyncSavesButton">Globally Sync Saves</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -117,11 +125,29 @@
                             <a class="waves-effect waves-light green btn white-text" onclick="setInstallLocation()">Save Install Location</a>
                         </div>
 
+                        <hr/>
+
+                        <div class="row">
+                            <h5>Data Management</h5>
+                            <div class="row">
+                                <div class="col s12">
+                                    <a href="#" class="waves-effect waves-dark white btn red-text">Reset Heirloom</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s12">
+                                    <a href="#" class="waves-effect waves-dark blue btn white-text">Cleanup Files</a>
+                                </div>
+                            </div>
+                        </div>
+
                         <hr class="hide-dev"/>
 
                         <div class="row hide-dev">
                             <h5>Development</h5>
-                            <a class="waves-effect waves-light btn white-text col s12" onclick="M.Modal.getInstance(document.getElementById('debugModal')).open(); getDebugInfo();">Open Debug Menu</a>
+                            <div class="col s12">
+                                <a class="waves-effect waves-light btn white-text" onclick="M.Modal.getInstance(document.getElementById('debugModal')).open(); getDebugInfo();">Open Debug Menu</a>
+                            </div>
                         </div>
                     </form>
     
@@ -200,25 +226,30 @@
                     <div id="gameButtons">
                         <div class="row">
                             <!-- Buttons to use when the game is installed -->
-                            <div class="col s3">
-                                <a href="#" class="waves-effect waves-light blue btn white-text" id="launchGameButton" class="col s3" onclick="launchGame(document.getElementById('appnameinput').value, false)">Launch Game</a>
+                            <div class="col s6">
+                                <a href="#" class="waves-effect waves-light blue btn white-text" id="launchGameButton" onclick="launchGame(document.getElementById('appnameinput').value, false)">Launch Game</a>
+                            </div>
+                            <div class="col s6">
+                                <a href="#" class="waves-effect waves-light transparent btn btn-flat white-text" id="launchOfflineButton" onclick="launchGame(document.getElementById('appnameinput').value, true)">Launch Offline</a>
                             </div>
                             <div class="col s3">
-                                <a href="#" class="waves-effect waves-light red btn white-text" id="uninstallButton" class="col s3" onclick="uninstallGame(document.getElementById('appnameinput').value)">Uninstall</a>
-                            </div>
-                            <!-- TODO: Hide the Update button when it's not needed -->
-                            <div class="col s3">
-                                <a href="#" class="waves-effect waves-light green btn white-text" id="updateButton" class="col s3" onclick="installGame(document.getElementById('appnameinput').value)">Update</a>
+                                <a href="#" class="waves-effect waves-light indigo btn white-text" id="verifyGameButton" onclick="verifyGame(document.getElementById('appnameinput').value, false);">Verify Files</a>
                             </div>
                             <div class="col s3">
-                                <a href="#" class="waves-effect waves-light transparent btn btn-flat white-text" id="launchOfflineButton" class="col s3" onclick="launchGame(document.getElementById('appnameinput').value, true)">Offline Launch</a>
+                                <a href="#" class="waves-effect waves-light red btn white-text" id="uninstallButton" onclick="uninstallGame(document.getElementById('appnameinput').value)">Uninstall</a>
+                            </div>
+                            <div class="col s3">
+                                <a href="#" class="waves-effect waves-light green btn white-text" id="updateButton" onclick="installGame(document.getElementById('appnameinput').value, document.getElementById('gameModalTitle').innerHTML)">Update</a>
+                            </div>
+                            <div class="col s3">
+                                <a href="#" class="waves-effect waves-light teal btn white-text" id="syncSavesButton">Sync Saves</a>
                             </div>
                         </div>
                     </div>
                     
                     <div class="row" id="installButton">
                         <div class="col s12">
-                            <a href="#" class="waves-effect waves-light green btn white-text" onclick="installGame(document.getElementById('appnameinput').value)">Install</a>
+                            <a href="#" class="waves-effect waves-light green btn white-text" onclick="installGame(document.getElementById('appnameinput').value, document.getElementById('gameModalTitle').innerHTML)">Install</a>
                         </div>
                     </div>
                 </div>
@@ -237,6 +268,26 @@
 
                 <div class="modal-footer grey darken-4">
                     <div class="row" id="cancelInstallButton">
+                        <div class="col s12">
+                            <a href="#" class="waves-effect waves-light red btn white-text">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="verifyModal" class="modal modal-fixed-footer grey darken-4">
+                <div class="modal-content grey darken-3">
+                    <h1 class="center">Verifying Files...</h1>
+                    <p class="center">Please sit tight. This may take awhile.</p>
+                    <br/>
+                    <p class="center"><span id="verifiedFiles">Unknown</span> / <span id="totalFilesToVerify">Unknown</span></p>
+                    <div class="progress">
+                        <div class="indeterminate" id="verifyProgressBar"></div>
+                    </div>
+                </div>
+
+                <div class="modal-footer grey darken-4">
+                    <div class="row" id="cancelVerifyButton">
                         <div class="col s12">
                             <a href="#" class="waves-effect waves-light red btn white-text">Cancel</a>
                         </div>

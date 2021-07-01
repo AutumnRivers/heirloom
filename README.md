@@ -109,6 +109,6 @@ A: Yes, but you shouldn't have to worry about Epic tracking you or anything. You
 
 Heirloom's github repo comes with uncompressed image / audio files. For image files, you can open them in PNG and ICO with any image viewing software. They also come in Photoshop RAW (.raw) and Photoshop PSD (.psd). Each image was made with Photoshop CC 2020.
 
-Audio files come uncompressed in FLAC and MP3 320kbps formats. I don't have the source files. Audio files are used for notifications and other effects. They are not in the initial release.
+Audio files come uncompressed in WAV format. I don't have the source files. Audio files are used for notifications and other effects.
 
 [Legendary]: https://github.com/derrod/legendary

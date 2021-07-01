@@ -1,6 +1,6 @@
 {
   "name": "heirloom",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A GUI for Legendary, an open-source alternative to the Epic Games Launcher.",
   "main": "index.js",
   "repository": "https://www.github.com/AutumnRivers/Heirloom",

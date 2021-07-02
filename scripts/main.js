@@ -1,7 +1,7 @@
 var M = require('materialize-css');
 const epicGamesStatus = require('epicgames-status');
 var fs = require('fs');
-const { ipcRenderer, remote } = require('electron');
+const { ipcRenderer, remote, ipcMain } = require('electron');
 const {dialog} = require('electron').remote;
 const { TextEncoder } = require('util');
 const shell = require('shelljs');
@@ -32,11 +32,17 @@ window.addEventListener('load', () => {
     window.verifyModalElem = M.Modal.getInstance(document.getElementById('verifyModal'))
 
     ipcRenderer.on('force-check', () => {
+        var tableHeaderRowCount = 1;
+        var table = document.getElementById('gamesTable');
+        var rowCount = table.rows.length;
+        for (var i = tableHeaderRowCount; i < rowCount; i++) {
+            table.deleteRow(tableHeaderRowCount);
+        }
         getUserInfo();
         checkGames();
     })
 
-    if(shell.which('legendary')) {
+    if(shell.which('legendary') || fs.existsSync('./legendary/legendary.exe')) {
         document.getElementById('legendaryStatus').innerHTML = 'Installed';
         getUserInfo();
         checkGames();
@@ -208,6 +214,8 @@ function getUserInfo() {
                 for (var i = tableHeaderRowCount; i < rowCount; i++) {
                     table.deleteRow(tableHeaderRowCount);
                 }
+
+                ipcRenderer.removeListener('legendary-term-data', parseUserInfo);
             } else {
                 document.getElementById('installedGamesNo').innerHTML = userInfo.games_installed;
                 document.getElementById('ownedGamesNo').innerHTML = userInfo.games_available;
@@ -309,9 +317,20 @@ function launchGame(gameID, isOffline) {
 }
 
 function installGame(gameID, gameName) {
-    ipcRenderer.send('use-legendary', 'installgame', [gameID]);
+    var confirmInstallDialog = remote.dialog.showMessageBoxSync(remote.getCurrentWindow(), {
+        type: 'info',
+        buttons: ['Install', 'Cancel'],
+        defaultId: 0,
+        title: `Do you really want to install ${gameName}`,
+        message: `Due to technical restrictions, you cannot cancel an installation once it starts. You have to be ABSOLUTELY SURE you want to install this.`,
+        icon: './images/HeirloomWarning.ico',
+        cancelId: 1
+    })
+    
+    if(confirmInstallDialog === 1) return;
 
     installerModalElem.open();
+    ipcRenderer.send('use-legendary', 'installgame', [gameID]);
 
     ipcRenderer.on('legendary-term-data', (ev, data) => {
         if(data.startsWith('[DLManager] INFO')) {
@@ -335,7 +354,7 @@ function installGame(gameID, gameName) {
                 document.getElementById('installProgressETA').innerHTML = `${etaHr}h ${etaMn}m ${etaSc}s`
                 document.getElementById('installProgressBar').style.width = `${Math.floor(percentProgress)}%`
             }
-        } else if(data.startsWith('[cli] INFO: Finished installation process')) {
+        } else if(data.includes('[cli] INFO: Finished installation process')) {
             var successSound = new Audio('../audio/success.wav');
             new Notification('Game Installed', {body: `${gameName} has been installed. Click to play!`})
                 .onclick = () => { launchGame(gameID) }
@@ -410,6 +429,34 @@ function verifyGame(gameID) {
             }
 
             verifyModalElem.close()
+        }
+    })
+}
+
+function cancelCurrentRun() {
+    installerModalElem.close();
+    verifyModalElem.close();
+    ipcRenderer.send('cancel-legendary');
+}
+
+function syncSaves(gameID) {
+    ipcRenderer.send('use-legendary', 'syncsaves', [gameID]);
+
+    ipcRenderer.on('legendary-term-data', (ev, data) => {
+        if(data.includes('[Core] INFO: Finished uploading savegame') || data.includes('[Core] INFO: Successfully completed savegame download') || data.includes('is up to date, skipping...')) {
+            alert('Save game sync was successful!');
+        }
+    })
+}
+
+function cleanupFiles() {
+    ipcRenderer.send('use-legendary', 'cleanupfiles');
+
+    ipcRenderer.on('legendary-term-data', (ev, data) => {
+        if(data.includes('[cli] INFO: Cleanup complete!')) {
+            var parsedData = data.split('[cli] INFO: ');
+            parsedData = parsedData[1]
+            alert(parsedData);
         }
     })
 }

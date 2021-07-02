@@ -194,6 +194,17 @@ function openMainWindow() {
             case 'remove-auth': // Remove authentication
                 spawnLegendaryConsole('auth', ['--delete']);
                 break;
+            case 'repairgane':
+                if(!args || args.length === 0) return mainWindow.webContents.send('args-required');
+                spawnLegendaryConsole('repair', [args[0]]);
+                break;
+            case 'syncsaves':
+                if(!args || args.length === 0) return mainWindow.webContents.send('args-required');
+                spawnLegendaryConsole('sync-saves', [args[0]]);
+                break;
+            case 'cleanupfiles':
+                spawnLegendaryConsole('cleanup');
+                break;
             default: // Failsafe
                 console.warn(chalk.yellow('Invalid Legendary Command'));
                 return mainWindow.webContents.send('invalid-command');
@@ -208,12 +219,17 @@ function openMainWindow() {
         // TODO: Use a package to actually spawn a window with this if enabled
         // --enable-terminal / -t
         if(typeof args === 'object') args = args.join(' ');
+        // You can't say that I haven't tried setting this to spawn, cause whenever I do, it's just error after fucking error and I. give. up. It's staying as exec, I don't wanna hear any ifs, ands, or buts!
         var legendaryTerminal = childProcess.exec(`"${legendaryCmd}" ${command} ${args}`);
+        var legendaryPID = legendaryTerminal.pid;
+
+        // As far as I can tell, there is absolutely no way to cancel Legendary's install process progmatically. It just isn't possible, because you cannot send Ctrl+C to the child process.
+        // FIXME: If any developer out there can somehow achieve this, I will applaud you. And I will be forever fucking grateful, because this feature is a MUST-HAVE.
     
         legendaryTerminal.stdout.on('data', (data) => {
             mainWindow.webContents.send('legendary-term-data', data);
             console.info('(LEGENDARY) ' + data);
-            if(data.startsWith('Do you wish to install') || data.startsWith('Do you wish to uninstall')) {
+            if(data.startsWith('Do you wish to install') || data.startsWith('Do you wish to uninstall') || data.includes('Upload local save?') || data.includes('Download cloud save?')) {
                 legendaryTerminal.stdin.write('y\n');
             } else if(data.startsWith('Please login via the epic web login!')) {
                 ipcMain.once('auth-token', (ev, token) => {

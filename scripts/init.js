@@ -5,7 +5,7 @@ const latestSupportedLegendary = '0.20.6'
 
 if(unix.which('legendary') || fs.existsSync('./legendary/legendary.exe')) {
     ipcRenderer.send('get-legendary-version');
-
+    // TODO: Add support for 0.20.18
     ipcRenderer.on('legendary-version', (ev, version) => {
         version = version.split('legendary version ')[1];
         version = version.split(',')[0];
@@ -17,7 +17,7 @@ if(unix.which('legendary') || fs.existsSync('./legendary/legendary.exe')) {
                 type: 'error',
                 buttons: ['Update Legendary', 'Close Heirloom', 'Continue With Unsupported Version'],
                 defaultId: 0,
-                title: 'Legendary Outdated',
+                title: 'Legendary Outdated / Too New',
                 message: `You are using an unsupported version of Legendary.\n\nThe latest supported release of Legendary is ${latestSupportedLegendary}, you are using ${version}.\n\nIf you're using an existing install of Legendary with PATH, you'll have to update Legendary yourself. If you're using the Heirloom install of Legendary, then you may update Legendary from here.`,
                 icon: './images/HeirloomError.ico',
                 cancelId: 2

@@ -1,5 +1,4 @@
 var M = require('materialize-css');
-const epicGamesStatus = require('epicgames-status');
 var fs = require('fs');
 const { ipcRenderer, remote, ipcMain } = require('electron');
 const {dialog} = require('electron').remote;
@@ -17,11 +16,6 @@ const appStorage = new Store({
 });
 
 M.AutoInit();
-
-epicGamesStatus().then(status => {
-    var egStatus = status;
-    document.getElementById('egStatus').innerHTML = egStatus.EpicGamesStore;
-});
 
 window.addEventListener('load', () => {
     document.title = 'Heirloom - Retrieving Data...';

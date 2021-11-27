@@ -995,10 +995,10 @@ electron-store@^6.0.1:
     conf "^7.1.2"
     type-fest "^0.16.0"
 
-electron@^10.4.6:
-  version "10.4.7"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-10.4.7.tgz#3ec7d46d02c0a6b4955f5fbf19a84d0e0c711184"
-  integrity sha512-je+AokZfKldI5GItXOx5pwBEAnbEqTrEPhaRUm2RN0OFBPXO+7wjJ3X+HvvlOHvKtfZrlU+57Dmkg1DseSFOPA==
+electron@^11.5.0:
+  version "11.5.0"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-11.5.0.tgz#f1650543b9d8f2047d3807755bdb120153ed210f"
+  integrity sha512-WjNDd6lGpxyiNjE3LhnFCAk/D9GIj1rU3GSDealVShhkkkPR3Vh4q8ErXGDl1OAO/faomVa10KoFPUN/pLbNxg==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^12.0.12"
@@ -1031,10 +1031,10 @@ env-paths@^2.2.0:
   resolved "https://registry.yarnpkg.com/env-paths/-/env-paths-2.2.0.tgz#cdca557dc009152917d6166e2febe1f039685e43"
   integrity sha512-6u0VYSCo/OW6IoD5WCLLy9JUGARbamfSavcNXry/eu8aHVFei6CD3Sw+VGX5alea1i9pgPHW0mbu6Xj0uBh7gA==
 
-epicgames-status@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/epicgames-status/-/epicgames-status-1.0.3.tgz#6af8db2f70f33ddbf3b734d9cfa06fdc3b6d398e"
-  integrity sha512-ZWkLzKM0DTP17WMbHj1H2dSFLqzleL74uXy9O1d5OzSyoUJ+upv1XaJ4Excg4sHzE7v+DTtV/fj563LZ1pAjXQ==
+epicgames-status@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/epicgames-status/-/epicgames-status-1.0.4.tgz#b316a7a456fae5108bff360d42ba933a7cf884d2"
+  integrity sha512-v6g5UY4PCT1HySsln8hTR2Q+0boFWnPWhrBbg8TxNT+5N7KUZoPKSQZ2Jhqh8wpr/IcpU/im50T1wSlk0e7hUg==
   dependencies:
     html-entities "^1.3.1"
     miniget "^2.0.1"

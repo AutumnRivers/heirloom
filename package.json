@@ -18,7 +18,7 @@
     "epicgames-status": "^1.0.4",
     "materialize-css": "^1.0.0",
     "node-fetch": "^2.6.1",
-    "shelljs": "^0.8.4"
+    "shelljs": "^0.8.5"
   },
   "devDependencies": {
     "electron": "^11.5.0",
